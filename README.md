@@ -54,10 +54,11 @@ The project follows a highly modular, decoupled architecture to ensure clean sep
   * 📄 `data_loader.py` — Standardized hyperspectral data loading and preprocessing
   * 📄 `metrics_tracker.py` — Statistical tracking, mean/std formatting, and paired t-tests
 * 📁 **datasets/** *(Place your raw datasets here)*
+  * 📊 `Spectral_DataSet.xlsx` — Dataset for Case Study 1
+  * 📊 `DATASET.xlsx` — Dataset for Case Study 2
   * 📊 `Indian_pines_corrected.mat` — Dataset for Case Study 3
   * 📊 `Indian_pines_gt.mat` — Dataset for Case Study 3
-  * 📊 `DATASET.xlsx` — Dataset for Case Study 2
-  * 📊 `Spectral_DataSet.xlsx` — Dataset for Case Study 1
+ 
 * 🐍 **main_exp1_GrapevineDisease.py** — Entry: Case Study 1 (Temporal Transfer)
 * 🐍 **main_exp2_Berry_Maturity.py** — Entry: Case Study 2 (Dual-Task Class + Reg)
 * 🐍 **main_exp3_Indian_Pines.py** — Entry: Case Study 3 (Hierarchical Generalization)
@@ -87,10 +88,17 @@ pip install -r requirements.txt
 
 Due to file size limits and hosting restrictions, the raw hyperspectral datasets are not included in this repository. Please download them from their respective public repositories and arrange them strictly within the datasets folder:
 
-* **Indian Pines Benchmark**: Download Indian_pines_corrected.mat and Indian_pines_gt.mat and place them under datasets.
-* **Berry Maturity Dataset**: Place the DATASET.xlsx sheet into datasets.
-* **Grapevine Longitudinal Dataset**: Place the Spectral_DataSet.xlsx sheet into datasets.
+* **Grapevine Longitudinal Dataset**: Download the dataset and place `Spectral_DataSet.xlsx` into the `datasets/` folder.
+  * 🔗 **[Download Link (Recherche Data Gouv)](https://doi.org/10.57745/KPNOJL)**
+  * 📄 *Reference:* S. Zhang, E. Perrin, V. Vrabie, et al., Multi-annual spectral data of chardonnay grapevine leaves presenting yellows diseases and confounding symptoms, Scientific Data 12 (2025) 1956. [doi:10.1038/s41597-025-06080-8](https://doi.org/10.1038/s41597-025-06080-8).
 
+* **Berry Maturity Dataset (Sugar)**: Download the dataset and place `DATASET.xlsx` into the `datasets/` folder.
+  * 🔗 **[Download Link (Mendeley Data)](https://doi.org/10.17632/gjwx64sgkp.1)**
+  * 📄 *Reference:* M. Ryckewaert et al., Dataset containing spectral data from hyperspectral imaging and sugar content measurements of grapes berries in various maturity stage, Data in Brief 46 (2023) 108822. [doi:10.1016/j.dib.2022.108822](https://doi.org/10.1016/j.dib.2022.108822).
+
+* **Indian Pines Benchmark**: Download `Indian_pines_corrected.mat` and `Indian_pines_gt.mat` and place them into the `datasets/` folder.
+  * 🔗 **[Download Link (Purdue PURR)](https://doi.org/10.4231/R7RX991C)**
+  * 📄 *Reference:* M. F. Baumgardner, L. L. Biehl, D. A. Landgrebe, 220 band AVIRIS hyperspectral image data set: June 12, 1992 Indian Pine test site 3 (2015). [doi:10.4231/R7RX991C](https://doi.org/10.4231/R7RX991C).
 ---
 
 ## 🚀 Running the Experiments
