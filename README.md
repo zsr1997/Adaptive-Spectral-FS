@@ -121,16 +121,7 @@ python main_exp3_Indian_Pines.py
 
 This project is licensed under the **MIT License** - see the LICENSE file for details. It is free to use, modify, and distribute for academic and commercial purposes, provided the original copyright notice is preserved.
 
-If you find this code or our framework useful in your research, please consider citing our paper (Currently Under Review):
-
-```bibtex
-@article{zhang2024adaptive,
-  title={Adaptive Task-Guided Feature Selection for Hyperspectral Data: A Hybrid Evolutionary Approach},
-  author={Zhang, S. and Perrin, E. and Vrabie, V. and others},
-  journal={Under Review},
-  year={2024}
-}
-```
+If you find this code or our framework useful in your research, please consider citing our paper (Currently Under Review).
 
 ## ✉️ Contact
 For any technical issues or implementation questions, please open an **Issue** in this repository or contact the authors directly.
