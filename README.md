@@ -71,18 +71,6 @@ The project follows a highly modular, decoupled architecture to ensure clean sep
 
 The framework is verified on **Python 3.9** using **PyTorch 2.0.1** and **Scikit-Learn 1.2.2**. It is highly recommended to manage dependencies via an isolated virtual environment (e.g., Anaconda).
 
-1. Clone this repository to your local machine:
-```bash
-git clone https://github.com/YourUsername/YourRepository.git
-cd YourRepository
-```
-
-2. Install all required packages using the bundled requirements.txt:
-```bash
-pip install -r requirements.txt
-```
-
----
 
 ## 📊 Data Preparation
 
