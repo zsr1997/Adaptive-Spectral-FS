@@ -47,10 +47,10 @@ def run_sugar_ablation(features, yc_all, yr_all, args):
 
         sc_t1, sc_t2, sc_mean = pop1.mean(0), pop3.mean(0), (pop1.mean(0)+pop2.mean(0)+pop3.mean(0))/3.0
         
-        sc_eq, _ = train_softmask_dnn_dual_proxy(pop1, pop2, pop3, xt_tr, yc_tr, yr_tr, xt_tr.shape[1], False, [1/3]*3)
-        sc_p1, _ = train_softmask_dnn_dual_proxy(pop1, pop2, pop3, xt_tr, yc_tr, yr_tr, xt_tr.shape[1], False, [0.5, 0.2, 0.3])
-        sc_p2, _ = train_softmask_dnn_dual_proxy(pop1, pop2, pop3, xt_tr, yc_tr, yr_tr, xt_tr.shape[1], False, [0.2, 0.5, 0.3])
-        sc_ad, lam = train_softmask_dnn_dual_proxy(pop1, pop2, pop3, xt_tr, yc_tr, yr_tr, xt_tr.shape[1], True)
+        sc_eq, *_ = train_softmask_dnn_dual_proxy(pop1, pop2, pop3, xt_tr, yc_tr, yr_tr, xt_tr.shape[1], False, [1/3]*3)
+        sc_p1, *_ = train_softmask_dnn_dual_proxy(pop1, pop2, pop3, xt_tr, yc_tr, yr_tr, xt_tr.shape[1], False, [0.5, 0.2, 0.3])
+        sc_p2, *_ = train_softmask_dnn_dual_proxy(pop1, pop2, pop3, xt_tr, yc_tr, yr_tr, xt_tr.shape[1], False, [0.2, 0.5, 0.3])
+        sc_ad, lam, *_ = train_softmask_dnn_dual_proxy(pop1, pop2, pop3, xt_tr, yc_tr, yr_tr, xt_tr.shape[1], True)
         
         if lam is not None: 
             lambdas_tracked.append(lam)
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     parser.add_argument("--N", type=int, default=40, help="GA Population size (default: 40)")
     parser.add_argument("--T", type=int, default=40, help="GA Max generations/iterations (default: 40)")
     parser.add_argument("--CR", type=float, default=0.8, help="GA Crossover Rate (default: 0.8)")
-    parser.add_argument("--MR", type=float, default=0.2, help="GA Mutation Rate (default: 0.2)")
+    parser.add_argument("--MR", type=float, default=0.01, help="GA Mutation Rate (default: 0.01)")
     parser.add_argument("--G", type=int, default=60, help="SoftMaskNet training epochs (default: 60)")
     parser.add_argument("--output_file", type=str, default="sugar_ablation_results.xlsx", help="Output Excel filename")
     

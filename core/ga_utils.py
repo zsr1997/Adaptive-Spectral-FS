@@ -15,7 +15,7 @@ def roulette_wheel(prob):
 
 def jfs(opts, fitness_function):
     ub, lb, thres = 1, 0, 0.5
-    CR, MR, N, max_iter = 0.8, 0.01, opts['N'], opts['T']
+    CR, MR, N, max_iter = opts.get('CR', 0.8), opts.get('MR', 0.01), opts['N'], opts['T']
     dim = opts['xt_in'].shape[1]
     X = binary_conversion(init_position(lb, ub, N, dim), thres)
     

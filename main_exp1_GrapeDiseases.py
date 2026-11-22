@@ -149,7 +149,7 @@ def run_dual_experiment_benchmark(features, class_labels, year_raw, args):
             
         print(f"\n[INFO] Results successfully saved to Excel file: {args.output_file}")
         
-        # 将曲线与历史文件作为 JSON 单独输出，后续可轻松通过 matplotlib 绘制
+        
         history_file = args.output_file.replace('.xlsx', '_history.json')
         with open(history_file, 'w') as f:
             json.dump(all_histories, f)
@@ -166,7 +166,7 @@ if __name__ == "__main__":
     parser.add_argument("--N", type=int, default=40, help="GA Population size (default: 40)")
     parser.add_argument("--T", type=int, default=40, help="GA Max generations/iterations (default: 40)")
     parser.add_argument("--CR", type=float, default=0.8, help="GA Crossover Rate (default: 0.8)")
-    parser.add_argument("--MR", type=float, default=0.2, help="GA Mutation Rate (default: 0.2)")
+    parser.add_argument("--MR", type=float, default=0.01, help="GA Mutation Rate (default: 0.01)")
     parser.add_argument("--G", type=int, default=60, help="SoftMaskNet training epochs (default: 60)")
     parser.add_argument("--target_year", type=int, default=4, help="Target year value for LOYO validation (default: 4)")
     parser.add_argument("--output_file", type=str, default="grapevine_ablation_results.xlsx", help="Output Excel filename")

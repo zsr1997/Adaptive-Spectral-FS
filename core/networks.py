@@ -120,13 +120,14 @@ def train_softmask_dnn_proxy_multi(pop1, pop2, pop3, xtrain, ytrain, num_feature
 # Exp 2: Dual-Task Proxy (DualProxyMaskNet)
 # ---------------------------------------------------------
 class DualProxyMaskNet(nn.Module):
-    def __init__(self, num_features, adaptive=True, fixed_weights=None, temp_scale=5.0):
+    def __init__(self, num_features, adaptive=True, fixed_weights=None, temp_scale=5.0, num_classes=2):
         super().__init__()
         self.adaptive = adaptive
         self.temp_scale = temp_scale 
         if self.adaptive: self.w_logits = nn.Parameter(torch.tensor([1.1, 1.0, 0.9]))
         else: self.register_buffer('fixed_w', torch.tensor(fixed_weights if fixed_weights else [1/3]*3, dtype=torch.float32))
-        self.cls_head = nn.Sequential(nn.Linear(num_features, 64), nn.ReLU(), nn.Dropout(0.2), nn.Linear(64, 1))
+        # one output per class (cross-entropy); the variety label has three classes
+        self.cls_head = nn.Sequential(nn.Linear(num_features, 64), nn.ReLU(), nn.Dropout(0.2), nn.Linear(64, num_classes))
         self.reg_head = nn.Sequential(nn.Linear(num_features, 64), nn.ReLU(), nn.Dropout(0.2), nn.Linear(64, 1))
 
     def get_mask(self, m1, m2, m3):
@@ -140,8 +141,10 @@ class DualProxyMaskNet(nn.Module):
 def train_softmask_dnn_dual_proxy(pop1, pop2, pop3, xtrain, yc_train, yr_train, num_features, adaptive=True, fixed_weights=None, temp_scale=5.0):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     yr_norm = (yr_train - np.mean(yr_train)) / (np.std(yr_train) + 1e-8)
-    loader = DataLoader(TensorDataset(torch.tensor(xtrain, dtype=torch.float32), torch.tensor(yc_train, dtype=torch.float32).unsqueeze(1), torch.tensor(yr_norm, dtype=torch.float32).unsqueeze(1)), batch_size=32, shuffle=True)
-    model = DualProxyMaskNet(num_features, adaptive, fixed_weights, temp_scale).to(device)
+    _, yc_idx = np.unique(yc_train, return_inverse=True)          # class indices 0..C-1
+    num_classes = int(yc_idx.max()) + 1
+    loader = DataLoader(TensorDataset(torch.tensor(xtrain, dtype=torch.float32), torch.tensor(yc_idx, dtype=torch.long), torch.tensor(yr_norm, dtype=torch.float32).unsqueeze(1)), batch_size=32, shuffle=True)
+    model = DualProxyMaskNet(num_features, adaptive, fixed_weights, temp_scale, num_classes).to(device)
     opt = torch.optim.Adam([{'params': model.cls_head.parameters()}, {'params': model.reg_head.parameters()}, {'params': [model.w_logits], 'lr': 0.05}] if adaptive else model.parameters(), lr=1e-3)
     
     weight_history = []
@@ -156,7 +159,7 @@ def train_softmask_dnn_dual_proxy(pop1, pop2, pop3, xtrain, yc_train, yr_train, 
             m2 = torch.tensor(pop2[np.random.randint(0, len(pop2), bx.shape[0])], dtype=torch.float32).to(device)
             m3 = torch.tensor(pop3[np.random.randint(0, len(pop3), bx.shape[0])], dtype=torch.float32).to(device)
             c_pred, r_pred, _ = model(m1, m2, m3, bx)
-            loss = nn.BCEWithLogitsLoss()(c_pred, byc) + nn.MSELoss()(r_pred, byr)
+            loss = nn.CrossEntropyLoss()(c_pred, byc) + nn.MSELoss()(r_pred, byr)
             opt.zero_grad(); loss.backward(); opt.step()
             epoch_loss += loss.item()
             

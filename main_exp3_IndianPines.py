@@ -46,10 +46,10 @@ def run_ip_ablation(features, task1_labels, task2_labels, args):
         sc_t2 = pop3.mean(0)
         sc_mean = (pop1.mean(0) + pop2.mean(0) + pop3.mean(0)) / 3.0
         
-        sc_eq, _ = train_softmask_dnn_proxy_multi(pop1, pop2, pop3, xt_tr, yt1_tr, xt_tr.shape[1], num_classes_t1, False, [1/3]*3)
-        sc_p1, _ = train_softmask_dnn_proxy_multi(pop1, pop2, pop3, xt_tr, yt1_tr, xt_tr.shape[1], num_classes_t1, False, [0.5, 0.2, 0.3])
-        sc_p2, _ = train_softmask_dnn_proxy_multi(pop1, pop2, pop3, xt_tr, yt1_tr, xt_tr.shape[1], num_classes_t1, False, [0.2, 0.5, 0.3])
-        sc_ad, lam = train_softmask_dnn_proxy_multi(pop1, pop2, pop3, xt_tr, yt1_tr, xt_tr.shape[1], num_classes_t1, True)
+        sc_eq, *_ = train_softmask_dnn_proxy_multi(pop1, pop2, pop3, xt_tr, yt1_tr, xt_tr.shape[1], num_classes_t1, False, [1/3]*3)
+        sc_p1, *_ = train_softmask_dnn_proxy_multi(pop1, pop2, pop3, xt_tr, yt1_tr, xt_tr.shape[1], num_classes_t1, False, [0.5, 0.2, 0.3])
+        sc_p2, *_ = train_softmask_dnn_proxy_multi(pop1, pop2, pop3, xt_tr, yt1_tr, xt_tr.shape[1], num_classes_t1, False, [0.2, 0.5, 0.3])
+        sc_ad, lam, *_ = train_softmask_dnn_proxy_multi(pop1, pop2, pop3, xt_tr, yt1_tr, xt_tr.shape[1], num_classes_t1, True)
         
         if lam is not None: 
             lambdas_tracked.append(lam)
@@ -121,7 +121,7 @@ if __name__ == "__main__":
     parser.add_argument("--N", type=int, default=40, help="GA Population size (default: 40)")
     parser.add_argument("--T", type=int, default=40, help="GA Max generations/iterations (default: 40)")
     parser.add_argument("--CR", type=float, default=0.8, help="GA Crossover Rate (default: 0.8)")
-    parser.add_argument("--MR", type=float, default=0.2, help="GA Mutation Rate (default: 0.2)")
+    parser.add_argument("--MR", type=float, default=0.01, help="GA Mutation Rate (default: 0.01)")
     parser.add_argument("--G", type=int, default=60, help="SoftMaskNet training epochs (default: 60)")
     parser.add_argument("--output_file", type=str, default="ip_ablation_results.xlsx", help="Output Excel filename")
     
