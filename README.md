@@ -26,19 +26,25 @@
 ---
 
 ## 🧠 Core Methodology Overview 
-
 1. **Decoupled Evolutionary Exploration**
-   Each conflicting objective (Relevance, Redundancy, Target Regression, or Domain Independence) is assigned to an autonomous binary GA population. This eliminates negative transfer risks caused by traditional multitasking crossover and allows exhaustive exploration of local task landscapes.
+   Each objective (class relevance, redundancy minimization, regression relevance, or independence from a confounding variable) is assigned to its own binary GA population. The populations evolve independently, so that each objective explores its own region of the search space without crossover between tasks.
 
 2. **Differentiable Mask Fusion**
-   During Stage 2 training, candidate chromosomes $c_t^{(u)}$ are stochastically sampled from each task's elite pool and aggregated via Softmax-normalized logits $\alpha$:
-   
-   $$M^{(u)} = \sum_{t=1}^{T} w_t \cdot c_t^{(u)}$$
-   
-   The raw continuous input is gated via element-wise multiplication: $x_{masked} = x_{raw} \odot M^{(u)}$, preserving higher-order non-linear band interactions.
+   During training, one chromosome $c_t^{(u)}$ is sampled from the elite set of each population and the chromosomes are fused **linearly** with Softmax-normalized weights $\omega_t$ (learnable logits $\alpha$):
 
-3. **Task-Guided Proxy Backpropagation**
-   The proxy network maps $x_{masked}$ directly to true labels $y_{true}$. The network parameters and task weight logits $\alpha$ are jointly updated end-to-end. If an evolutionary objective produces unstable or noise-prone bands that degrade downstream classification accuracy or raise regression MSE, gradient descent naturally drives its corresponding integration weight $w_t$ toward zero, acting as an automated regularizer.
+   $$M^{(u)} = \sum_{t=1}^{T} \omega_t \cdot c_t^{(u)}$$
+
+   The raw spectrum is gated by element-wise multiplication, $x_{masked} = x_{raw} \odot M^{(u)}$.
+
+3. **Task-Guided Weight Learning**
+   A lightweight proxy network (SoftMaskNet) predicts the supervised target(s) from $x_{masked}$. Its parameters $\theta$ and the logits $\alpha$ are trained jointly, so that populations whose masks help the prediction receive larger weights $\omega_t$. The proxy network is only used to learn the weights: it is not used at inference.
+
+4. **Inference: One Ranking for Every Budget**
+   The features are ranked by the linear fusion of the elite centroids with the learned weights,
+
+   $$m_{final} = \sum_{t=1}^{T} \omega_t^{*} \cdot \bar{c}_t ,$$
+
+   and the $K$ highest-ranked bands are selected. A single run therefore yields nested subsets for every band budget $K$ (e.g. the number of filters of a multispectral camera).
 
 ---
 
