@@ -18,7 +18,7 @@
 
 <div align="center">
   
-  <img src="framework.png" alt="Framework Pipeline" width="85%">
+  <img src="framework2.png" alt="Framework Pipeline" width="85%">
   
   <p><i>Figure 1: Overall architecture of the Hybrid GA-NN framework for task-guided feature selection.</i></p>
 </div>
